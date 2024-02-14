@@ -1,7 +1,7 @@
-import {SERVER_URL} from '@/config'
+import { SERVER_URL } from '@/config'
 import { ILoginRequest, ILoginResponse } from '@/types/user'
 
-export async function postLogin(request: ILoginRequest): Promise<ILoginResponse> {
+export async function login(request: ILoginRequest): Promise<ILoginResponse> {
     const res = await fetch(`${SERVER_URL}/users/login`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${request.secret.token}`, 'Content-Type': 'application/json' },
@@ -10,4 +10,5 @@ export async function postLogin(request: ILoginRequest): Promise<ILoginResponse>
     if (!res.ok) {
         throw new Error('network response was not ok')
     }
+    return res.json()
 }

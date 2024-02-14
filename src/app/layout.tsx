@@ -1,18 +1,32 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+'use client'
+
+import { QueryClient, QueryClientProvider } from 'react-query'
+
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
-
-export const metadata: Metadata = {
-    title: 'Re:memory',
-    description: 'Make your memories',
-}
-
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+    const queryClient = new QueryClient({
+        defaultOptions: {
+            queries: {
+                suspense: true,
+            },
+            mutations: {
+                useErrorBoundary: true,
+                retry: 1,
+            },
+        },
+    })
     return (
-        <html lang="en">
-            <body className={inter.className}>{children}</body>
+        <html lang="ko">
+            <head>
+                <title>Re:memory</title>
+            </head>
+            <body>
+                <QueryClientProvider client={queryClient}>
+                    {/*TODO: make header*/}
+                    <div className="flex flex-row p-2">{children}</div>
+                </QueryClientProvider>
+            </body>
         </html>
     )
 }
