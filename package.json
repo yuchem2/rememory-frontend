@@ -13,7 +13,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.50.1",
-    "react-query": "^3.39.3"
+    "react-query": "^3.39.3",
+    "react-tooltip": "^5.26.2"
   },
   "devDependencies": {
     "@types/node": "^20",

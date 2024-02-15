@@ -1,12 +1,14 @@
 'use client'
 
+import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
 import { useRouter } from 'next/navigation'
 import { ILoginRequest } from '@/types/user'
 import { login } from '@/api/user'
-import { IdIcon, PasswdIcon } from '@/icon'
+import { IdIcon, PasswdIcon, ShowIcon } from '@/icon'
 import Link from 'next/link'
+import FormError from '@/components/form/formError'
 
 interface Inputs {
     id: string
@@ -14,6 +16,7 @@ interface Inputs {
 }
 
 export default function Page() {
+    const [showPasswd, setShowPasswd] = useState(false)
     const {
         register,
         handleSubmit,
@@ -26,6 +29,7 @@ export default function Page() {
             return login(request)
         },
         onSuccess: async () => {
+            // TODO: change url
             router.push('/')
         },
     })
@@ -40,21 +44,17 @@ export default function Page() {
                 passwd: data.passwd,
             },
             secret: {
-                token: 'secret',
+                clientToken: 'secret',
             },
         }
         mutation.mutate(request)
     }
 
     return (
-        <div className="flex flex-col items-center align-center w-full h-full">
-            <header className="text-5xl m-2 pb-4">
-                <em className="text-[#c4b5fd]">Re</em>:memory
-            </header>
+        <div className="flex flex-col items-center w-1/3 h-full">
             <div className="border rounded border-gray-400 w-80 p-2">
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="box-content p-2 m-2">
-                        <h5 className="text-2xl"></h5>
+                    <div className="box-content p-2 pb-4 m-2">
                         <div className="flex flex-row border rounded-t-lg border-gray-400 p-2">
                             <div className="w-5 pt-1 pe-1">
                                 <IdIcon />
@@ -63,6 +63,7 @@ export default function Page() {
                                 id="login/id"
                                 className="w-full"
                                 placeholder="아이디"
+                                maxLength={30}
                                 {...register('id', { required: '아이디를 입력해 주세요.' })}
                             />
                         </div>
@@ -73,15 +74,23 @@ export default function Page() {
                             <input
                                 id="login/passwd"
                                 className="w-full"
+                                type={showPasswd ? 'text' : 'password'}
                                 placeholder="비밀번호"
-                                {...register('passwd', { required: '비밀번호를 입력해 주세요.' })}
+                                maxLength={30}
+                                {...register('passwd', {
+                                    required: '비밀번호를 입력해 주세요.',
+                                })}
                             />
+                            <button
+                                className="w-5 text-gray-500"
+                                onClick={() => {
+                                    setShowPasswd(!showPasswd)
+                                }}
+                            >
+                                <ShowIcon slash={showPasswd} />
+                            </button>
                         </div>
-                        {errorMessage && (
-                            <div className="relative text-[#fb896b] px-1 py-3 mt-2" role="alert">
-                                <strong className="font-bold">{errorMessage}</strong>
-                            </div>
-                        )}
+                        <FormError message={errorMessage} />
                     </div>
                     <div className="px-2 m-2">
                         <button
@@ -96,7 +105,7 @@ export default function Page() {
             </div>
             {/*TODO: make authorization login*/}
             <div className="flex flex-row text-gray-500 pt-2">
-                <Link href="/signup">회원가입</Link>
+                <Link href="/auth/signup">회원가입</Link>
             </div>
         </div>
     )
