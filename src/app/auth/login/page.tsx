@@ -35,7 +35,7 @@ export default function Page() {
             } else {
                 // TODO: change url
                 localStorage.setItem('nickname', data.nickname)
-                // router.push('/')
+                router.push('/')
             }
         },
         retry: false,
