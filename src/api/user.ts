@@ -5,12 +5,16 @@ import { QueryFunctionContext } from 'react-query'
 export async function login(request: ILoginRequest): Promise<ILoginResponse> {
     const res = await fetch(`${SERVER_URL}/users/login`, {
         method: 'POST',
+        credentials: 'include',
         headers: { clientToken: `Bearer ${request.secret.clientToken}`, 'Content-Type': 'application/json' },
         body: JSON.stringify(request.body),
     })
-    if (!res.ok) {
+    if (res.status === 401 || res.status === 404) {
+        return res.json()
+    } else if (!res.ok) {
         throw new Error('network response was not ok')
     }
+
     return res.json()
 }
 

@@ -4,10 +4,10 @@ import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { ILoginRequest } from '@/types/user'
 import { login } from '@/api/user'
 import { IdIcon, PasswdIcon, ShowIcon } from '@/icon'
-import Link from 'next/link'
 import FormError from '@/components/form/formError'
 
 interface Inputs {
@@ -17,6 +17,7 @@ interface Inputs {
 
 export default function Page() {
     const [showPasswd, setShowPasswd] = useState(false)
+    const [queryError, setQueryError] = useState('')
     const {
         register,
         handleSubmit,
@@ -28,10 +29,16 @@ export default function Page() {
         mutationFn: (request: ILoginRequest) => {
             return login(request)
         },
-        onSuccess: async () => {
-            // TODO: change url
-            router.push('/')
+        onSuccess: async data => {
+            if (data.message) {
+                setQueryError('아이디가 존재하지 않거나 비밀번호가 틀렸습니다')
+            } else {
+                // TODO: change url
+                localStorage.setItem('nickname', data.nickname)
+                router.push('/')
+            }
         },
+        retry: false,
     })
 
     const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
@@ -56,9 +63,9 @@ export default function Page() {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="box-content p-2 pb-4 m-2">
                         <div className="flex flex-row border rounded-t-lg border-gray-400 p-2">
-                            <div className="w-5 pt-1 pe-1">
+                            <i className="w-5 pt-1 pe-1">
                                 <IdIcon />
-                            </div>
+                            </i>
                             <input
                                 id="login/id"
                                 className="w-full"
@@ -68,9 +75,9 @@ export default function Page() {
                             />
                         </div>
                         <div className="flex flex-row border-b border-s border-e rounded-b-lg border-gray-400 p-2">
-                            <div className="w-5 pt-1 pe-1">
+                            <i className="w-5 pt-1 pe-1">
                                 <PasswdIcon />
-                            </div>
+                            </i>
                             <input
                                 id="login/passwd"
                                 className="w-full"
@@ -81,16 +88,17 @@ export default function Page() {
                                     required: '비밀번호를 입력해 주세요.',
                                 })}
                             />
-                            <button
-                                className="w-5 text-gray-500"
+                            <i
+                                className="cursor-pointer w-5 pt-1 text-gray-500"
                                 onClick={() => {
                                     setShowPasswd(!showPasswd)
                                 }}
                             >
                                 <ShowIcon slash={showPasswd} />
-                            </button>
+                            </i>
                         </div>
                         <FormError message={errorMessage} />
+                        <FormError message={queryError} />
                     </div>
                     <div className="px-2 m-2">
                         <button

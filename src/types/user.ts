@@ -22,8 +22,8 @@ export interface ISignupRequest {
 }
 
 export interface ILoginResponse {
-    jwt: string
     nickname: string
+    message?: string
 }
 
 export interface IGetValidationResponse {
