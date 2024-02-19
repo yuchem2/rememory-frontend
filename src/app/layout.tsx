@@ -25,7 +25,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <body>
                 <QueryClientProvider client={queryClient}>
                     {/*TODO: make header*/}
-                    <div className="flex flex-row p-2">{children}</div>
+                    <div className="w-full h-full">{children}</div>
                 </QueryClientProvider>
             </body>
         </html>
