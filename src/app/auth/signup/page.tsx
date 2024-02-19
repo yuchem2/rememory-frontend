@@ -24,8 +24,9 @@ export default function Page() {
     const {
         register,
         handleSubmit,
-        getValues,
+        watch,
         setError,
+        clearErrors,
         formState: { isSubmitting, errors },
     } = useForm<Inputs>()
 
@@ -70,8 +71,8 @@ export default function Page() {
             <div className="border rounded border-gray-400 w-80 p-2">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="box-content p-2 pb-4 m-2">
-                        <div className="border-t border-x rounded-t-lg border-gray-400 p-2">
-                            <NicknameValidation inData={getValues('nickname')} setError={setError}>
+                        <div className={`border rounded-t-lg p-2 -mb-[1px] ${errors?.nickname?.message ? 'relative border-[#fb896b]' : 'border-gray-400'}`}>
+                            <NicknameValidation inData={watch('nickname')} setError={setError} clearError={clearErrors}>
                                 <div className="w-5 pt-1 pe-1">
                                     <IdIcon />
                                 </div>
@@ -88,8 +89,8 @@ export default function Page() {
                                 />
                             </NicknameValidation>
                         </div>
-                        <div className="border-t border-x border-gray-400 p-2">
-                            <IdValidation inData={getValues('id')} setError={setError}>
+                        <div className={`border p-2 -mb-[1px] ${errors?.id?.message ? 'relative border-[#fb896b]' : 'border-gray-400'}`}>
+                            <IdValidation inData={watch('id')} setError={setError} clearError={clearErrors}>
                                 <div className="w-5 pt-1 pe-1">
                                     <IdIcon />
                                 </div>
@@ -106,51 +107,55 @@ export default function Page() {
                                 />
                             </IdValidation>
                         </div>
-                        <div className="flex flex-row border-t border-x border-gray-400 p-2">
-                            <div className="w-5 pt-1 pe-1">
-                                <PasswdIcon />
+                        <div className={`border p-2 -mb-[1px] ${errors?.passwd1?.message ? 'relative border-[#fb896b]' : 'border-gray-400'}`}>
+                            <div className="flex flex-row">
+                                <div className="w-5 pt-1 pe-1">
+                                    <PasswdIcon />
+                                </div>
+                                <input
+                                    id="sign/passwd1"
+                                    className="w-full"
+                                    type={showPasswd1 ? 'text' : 'password'}
+                                    placeholder="비밀번호"
+                                    maxLength={30}
+                                    {...register('passwd1', {
+                                        required: '비밀번호를 입력해 주세요.',
+                                        minLength: { value: 8, message: '비밀번호는 8글자에서 14글자 사이이여야 합니다.' },
+                                        maxLength: { value: 14, message: '비밀번호는 8글자에서 14글자 사이여야 합니다.' },
+                                    })}
+                                />
+                                <button
+                                    className="w-5 text-gray-500"
+                                    onClick={() => {
+                                        setShowPasswd1(!showPasswd1)
+                                    }}
+                                >
+                                    <ShowIcon slash={showPasswd1} />
+                                </button>
                             </div>
-                            <input
-                                id="sign/passwd1"
-                                className="w-full"
-                                type={showPasswd1 ? 'text' : 'password'}
-                                placeholder="비밀번호"
-                                maxLength={30}
-                                {...register('passwd1', {
-                                    required: '비밀번호를 입력해 주세요.',
-                                    minLength: { value: 8, message: '비밀번호는 8글자에서 14글자 사이이여야 합니다.' },
-                                    maxLength: { value: 14, message: '비밀번호는 8글자에서 14글자 사이여야 합니다.' },
-                                })}
-                            />
-                            <button
-                                className="w-5 text-gray-500"
-                                onClick={() => {
-                                    setShowPasswd1(!showPasswd1)
-                                }}
-                            >
-                                <ShowIcon slash={showPasswd1} />
-                            </button>
                         </div>
-                        <div className="flex flex-row border rounded-b-lg border-gray-400 p-2">
-                            <div className="w-5 pt-1 pe-1">
-                                <PasswdIcon />
+                        <div className={`border rounded-b-lg p-2 mb-2 ${errors?.passwd2?.message ? 'border-[#fb896b]' : 'border-gray-400'}`}>
+                            <div className="flex flex-row">
+                                <div className="w-5 pt-1 pe-1">
+                                    <PasswdIcon />
+                                </div>
+                                <input
+                                    id="sign/passwd2"
+                                    className="w-full"
+                                    type={showPasswd2 ? 'text' : 'password'}
+                                    placeholder="비밀번호 확인"
+                                    maxLength={30}
+                                    {...register('passwd2', { required: '비밀번호와 같게 입력해 주세요.' })}
+                                />
+                                <button
+                                    className="w-5 text-gray-500"
+                                    onClick={() => {
+                                        setShowPasswd2(!showPasswd2)
+                                    }}
+                                >
+                                    <ShowIcon slash={showPasswd2} />
+                                </button>
                             </div>
-                            <input
-                                id="sign/passwd2"
-                                className="w-full"
-                                type={showPasswd2 ? 'text' : 'password'}
-                                placeholder="비밀번호 확인"
-                                maxLength={30}
-                                {...register('passwd2', { required: '비밀번호와 같게 입력해 주세요.' })}
-                            />
-                            <button
-                                className="w-5 text-gray-500"
-                                onClick={() => {
-                                    setShowPasswd2(!showPasswd2)
-                                }}
-                            >
-                                <ShowIcon slash={showPasswd2} />
-                            </button>
                         </div>
                         {errorMessages &&
                             errorMessages.map((errorMessage, index) => {
@@ -162,7 +167,7 @@ export default function Page() {
                     <div className="px-2 m-2">
                         <button
                             type="submit"
-                            className="border rounded text-2xl w-full p-1 text-white bg-[#c4b5fd] border-[#b0a2e3]"
+                            className="banSelect border rounded text-2xl w-full p-1 text-white bg-[#c4b5fd] border-[#b0a2e3]"
                             disabled={isSubmitting}
                         >
                             회원가입

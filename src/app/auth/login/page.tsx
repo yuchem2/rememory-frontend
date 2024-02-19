@@ -103,7 +103,7 @@ export default function Page() {
                     <div className="px-2 m-2">
                         <button
                             type="submit"
-                            className="border rounded text-2xl w-full p-1 text-white bg-[#c4b5fd] border-[#b0a2e3]"
+                            className="banSelect border rounded text-2xl w-full p-1 text-white bg-[#c4b5fd] border-[#b0a2e3]"
                             disabled={isSubmitting}
                         >
                             로그인
@@ -112,7 +112,7 @@ export default function Page() {
                 </form>
             </div>
             {/*TODO: make authorization login*/}
-            <div className="flex flex-row text-gray-500 pt-2">
+            <div className="banSelect flex flex-row text-gray-500 pt-2">
                 <Link href="/auth/signup">회원가입</Link>
             </div>
         </div>
