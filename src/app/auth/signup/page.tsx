@@ -71,7 +71,9 @@ export default function Page() {
             <div className="border rounded border-gray-400 w-80 p-2">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="box-content p-2 pb-4 m-2">
-                        <div className={`border rounded-t-lg p-2 -mb-[1px] ${errors?.nickname?.message ? 'relative border-[#fb896b]' : 'border-gray-400'}`}>
+                        <div
+                            className={`border rounded-t-lg p-2 -mb-[1px] ${errors?.nickname?.message ? 'relative border-[#fb896b]' : 'border-gray-400'}`}
+                        >
                             <NicknameValidation inData={watch('nickname')} setError={setError} clearError={clearErrors}>
                                 <div className="w-5 pt-1 pe-1">
                                     <IdIcon />
