@@ -1,23 +1,19 @@
-export interface ILoginRequest {
+import { IRequest } from './request'
+
+export interface ILoginRequest extends IRequest {
     body: {
         provider: string
         id: string
         passwd: string
     }
-    secret: {
-        clientToken: string
-    }
 }
 
-export interface ISignupRequest {
+export interface ISignupRequest extends IRequest {
     body: {
         provider: string
         id: string
         passwd: string
         nickname: string
-    }
-    secret: {
-        clientToken: string
     }
 }
 

@@ -1,12 +1,12 @@
 import { SERVER_URL } from '@/config'
-import { IGetValidationResponse, ILoginRequest, ILoginResponse, ISignupRequest } from '@/types/user'
+import { IGetValidationResponse, ILoginRequest, ILoginResponse, ISignupRequest } from '@/types'
 import { QueryFunctionContext } from 'react-query'
 
 export async function login(request: ILoginRequest): Promise<ILoginResponse> {
     const res = await fetch(`${SERVER_URL}/users/login`, {
         method: 'POST',
         credentials: 'include',
-        headers: { clientToken: `Bearer ${request.secret.clientToken}`, 'Content-Type': 'application/json' },
+        headers: { Authorization: `Bearer ${request.secret.clientToken}`, 'Content-Type': 'application/json' },
         body: JSON.stringify(request.body),
     })
     if (res.status === 401 || res.status === 404) {
@@ -21,7 +21,7 @@ export async function login(request: ILoginRequest): Promise<ILoginResponse> {
 export async function signup(request: ISignupRequest): Promise<void> {
     const res = await fetch(`${SERVER_URL}/users/signup`, {
         method: 'POST',
-        headers: { clientToken: `Bearer ${request.secret.clientToken}`, 'Content-Type': 'application/json' },
+        headers: { Authorization: `Bearer ${request.secret.clientToken}`, 'Content-Type': 'application/json' },
         body: JSON.stringify(request.body),
     })
     if (!res.ok) {
@@ -34,7 +34,7 @@ export async function idValidation({ queryKey }: QueryFunctionContext<[string, s
 
     const res = await fetch(`${SERVER_URL}/users/check-id/${id}`, {
         method: 'GET',
-        headers: { clientToken: `Bearer ${secret}`, 'Content-Type': 'application/json' },
+        headers: { Authorization: `Bearer ${secret}`, 'Content-Type': 'application/json' },
     })
     if (!res.ok) {
         throw new Error('network response was not ok')
@@ -47,7 +47,7 @@ export async function nicknameValidation({ queryKey }: QueryFunctionContext<[str
 
     const res = await fetch(`${SERVER_URL}/users/check-nickname/${nickname}`, {
         method: 'GET',
-        headers: { clientToken: `Bearer ${secret}`, 'Content-Type': 'application/json' },
+        headers: { Authorization: `Bearer ${secret}`, 'Content-Type': 'application/json' },
     })
     if (!res.ok) {
         throw new Error('network response was not ok')

@@ -10,6 +10,8 @@ import { signup } from '@/api/user'
 import { IdIcon, PasswdIcon, ShowIcon } from '@/icon'
 import FormError from '@/components/form/formError'
 import { IdValidation, NicknameValidation } from '@/components/form/validation'
+import crypto from 'crypto'
+import { useRSA } from '@/hooks'
 
 interface Inputs {
     id: string
@@ -41,9 +43,8 @@ export default function Page() {
             router.push('/')
         },
     })
-
+    const rsaKey = useRSA()
     const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
-        // TODO: passwd encryption
         // TODO: change provider
         if (data.passwd1 !== data.passwd2) {
             setError('passwd2', {
@@ -51,11 +52,19 @@ export default function Page() {
                 message: '비밀번호와 같게 입력해주세요.',
             })
         } else {
+            const encryptPasswd = crypto.publicEncrypt(
+                {
+                    key: rsaKey,
+                    padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+                    oaepHash: 'sha256',
+                },
+                Buffer.from(data.passwd1),
+            )
             const request: ISignupRequest = {
                 body: {
                     provider: 'rememory',
                     id: data.id,
-                    passwd: data.passwd1,
+                    passwd: encryptPasswd.toString('hex'),
                     nickname: data.nickname,
                 },
                 secret: {

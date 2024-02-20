@@ -5,10 +5,13 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import crypto from 'crypto'
+
 import { ILoginRequest } from '@/types/user'
 import { login } from '@/api/user'
 import { IdIcon, PasswdIcon, ShowIcon } from '@/icon'
 import FormError from '@/components/form/formError'
+import { useRSA } from '@/hooks'
 
 interface Inputs {
     id: string
@@ -34,21 +37,29 @@ export default function Page() {
                 setQueryError('아이디가 존재하지 않거나 비밀번호가 틀렸습니다')
             } else {
                 // TODO: change url
-                localStorage.setItem('nickname', data.nickname)
+                sessionStorage.setItem('nickname', data.nickname)
                 router.push('/')
             }
         },
         retry: false,
     })
-
+    const rsaKey = useRSA()
     const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
-        // TODO: passwd encryption
         // TODO: change provider
+        const encryptPasswd = crypto.publicEncrypt(
+            {
+                key: rsaKey,
+                oaepHash: 'sha256',
+                padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+            },
+            Buffer.from(data.passwd),
+        )
+        console.log(encryptPasswd.toString('hex'))
         const request: ILoginRequest = {
             body: {
                 provider: 'rememory',
                 id: data.id,
-                passwd: data.passwd,
+                passwd: encryptPasswd.toString('hex'),
             },
             secret: {
                 clientToken: 'secret',
