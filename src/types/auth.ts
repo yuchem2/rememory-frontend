@@ -1,3 +1,4 @@
 export interface IGetRSAResponse {
-    key: string
+    secret: string
+    target: string
 }

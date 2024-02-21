@@ -5,6 +5,8 @@ export interface ILoginRequest extends IRequest {
         provider: string
         id: string
         passwd: string
+        iv: string
+        tag: string
     }
 }
 
@@ -14,6 +16,8 @@ export interface ISignupRequest extends IRequest {
         id: string
         passwd: string
         nickname: string
+        iv: string
+        tag: string
     }
 }
 

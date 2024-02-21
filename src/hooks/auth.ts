@@ -3,7 +3,7 @@ import { useQuery } from 'react-query'
 import { getRSA } from '@/api/auth'
 import { IGetRSAResponse } from '@/types'
 
-export function useRSA(): string {
+export function useRSA(): [string, string] {
     const [client, setClient] = useState(false)
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -19,5 +19,5 @@ export function useRSA(): string {
             staleTime: 1000 * 60 * 6,
         })?.data || ({} as IGetRSAResponse)
 
-    return data.key
+    return [data.secret, data.target]
 }
