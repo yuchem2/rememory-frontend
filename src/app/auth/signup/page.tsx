@@ -10,6 +10,8 @@ import { signup } from '@/api/user'
 import { IdIcon, PasswdIcon, ShowIcon } from '@/icon'
 import FormError from '@/components/form/formError'
 import { IdValidation, NicknameValidation } from '@/components/form/validation'
+import { useRSA } from '@/hooks'
+import { encryptPasswd } from '@/services/auth'
 
 interface Inputs {
     id: string
@@ -37,13 +39,11 @@ export default function Page() {
             return signup(request)
         },
         onSuccess: async () => {
-            // TODO: change url
-            router.push('/')
+            router.push('/auth/login')
         },
     })
-
+    const [secret, target] = useRSA()
     const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
-        // TODO: passwd encryption
         // TODO: change provider
         if (data.passwd1 !== data.passwd2) {
             setError('passwd2', {
@@ -51,11 +51,14 @@ export default function Page() {
                 message: '비밀번호와 같게 입력해주세요.',
             })
         } else {
+            const encryptData = encryptPasswd(secret, target, data.passwd1)
             const request: ISignupRequest = {
                 body: {
                     provider: 'rememory',
                     id: data.id,
-                    passwd: data.passwd1,
+                    passwd: encryptData.encrypted,
+                    iv: encryptData.iv,
+                    tag: encryptData.tag,
                     nickname: data.nickname,
                 },
                 secret: {
