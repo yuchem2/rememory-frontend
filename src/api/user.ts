@@ -1,5 +1,5 @@
 import { SERVER_URL } from '@/config'
-import { IGetValidationResponse, ILoginRequest, ILoginResponse, ISignupRequest } from '@/types'
+import { IGetValidationResponse, ILoginRequest, ILoginResponse, ISignupRequest } from '@/types/user'
 import { QueryFunctionContext } from 'react-query'
 
 export async function login(request: ILoginRequest): Promise<ILoginResponse> {
