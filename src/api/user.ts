@@ -12,7 +12,7 @@ export async function login(request: ILoginRequest): Promise<ILoginResponse> {
     if (!res.ok) {
         const body = await res.json()
         if (body.code === 600 || body.code === 601) {
-            return res.json()
+            return body
         } else {
             throw new Error('network response was not ok')
         }
