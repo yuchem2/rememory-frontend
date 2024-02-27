@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Tooltip } from 'react-tooltip'
 import { UseFormClearErrors, UseFormSetError } from 'react-hook-form'
 import { useQuery } from 'react-query'
@@ -67,7 +67,7 @@ export function IdValidation({ children, inData, setError, clearError }: Props) 
     const [send, onSend] = useState(false)
     const [isValidation, setIsValidation] = useState(false)
     const data =
-        useQuery(['idValidation', inData, 'secret'], idValidation, {
+        useQuery(['idValidation', inData, 'rememory', 'secret'], idValidation, {
             enabled: send && !!inData,
             cacheTime: 0,
         })?.data || ({} as IGetValidationResponse)
