@@ -9,12 +9,14 @@ export async function login(request: ILoginRequest): Promise<ILoginResponse> {
         headers: { Authorization: `Bearer ${request.secret.clientToken}`, 'Content-Type': 'application/json' },
         body: JSON.stringify(request.body),
     })
-    if (res.status === 401 || res.status === 404) {
-        return res.json()
-    } else if (!res.ok) {
-        throw new Error('network response was not ok')
+    if (!res.ok) {
+        const body = await res.json()
+        if (body.code === 600 || body.code === 601) {
+            return res.json()
+        } else {
+            throw new Error('network response was not ok')
+        }
     }
-
     return res.json()
 }
 
@@ -29,10 +31,10 @@ export async function signup(request: ISignupRequest): Promise<void> {
     }
 }
 
-export async function idValidation({ queryKey }: QueryFunctionContext<[string, string, string]>): Promise<IGetValidationResponse> {
-    const [, id, secret] = queryKey
+export async function idValidation({ queryKey }: QueryFunctionContext<[string, string, string, string]>): Promise<IGetValidationResponse> {
+    const [, id, provider, secret] = queryKey
 
-    const res = await fetch(`${SERVER_URL}/users/check-id/${id}`, {
+    const res = await fetch(`${SERVER_URL}/users/check-id/${id}?provider=${provider}`, {
         method: 'GET',
         headers: { Authorization: `Bearer ${secret}`, 'Content-Type': 'application/json' },
     })

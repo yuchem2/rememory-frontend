@@ -4,7 +4,7 @@ import { QueryFunctionContext } from 'react-query'
 
 export async function getRSA({ queryKey }: QueryFunctionContext<[string, string]>): Promise<IGetRSAResponse> {
     const [, secret] = queryKey
-    const res = await fetch(`${SERVER_URL}/auth/rsa`, {
+    const res = await fetch(`${SERVER_URL}/auth/secret`, {
         method: 'GET',
         headers: { Authorization: `Bearer ${secret}`, 'Content-Type': 'application/json' },
     })
