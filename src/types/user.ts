@@ -21,6 +21,8 @@ export interface ISignupRequest extends IRequest {
     }
 }
 
+export interface ILogoutRequest extends IRequest {}
+
 export interface ILoginResponse {
     nickname: string
     message?: string
