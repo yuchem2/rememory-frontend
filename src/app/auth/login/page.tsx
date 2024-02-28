@@ -36,9 +36,8 @@ export default function Page() {
             if (data.message) {
                 setQueryError('아이디가 존재하지 않거나 비밀번호가 틀렸습니다')
             } else {
-                // TODO: change url
                 sessionStorage.setItem('nickname', data.nickname)
-                router.push('/')
+                router.push('/memories')
             }
         },
         retry: false,
