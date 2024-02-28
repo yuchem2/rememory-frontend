@@ -12,8 +12,8 @@ export default function Header() {
             return logout(request)
         },
         onSuccess: async () => {
-            sessionStorage.clear()
             router.push('/')
+            sessionStorage.clear()
         },
     })
     const logoutToggle = () => {
